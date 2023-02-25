@@ -1,0 +1,126 @@
+version: '3'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: environments/php/Dockerfile
+    image: fixeditforyou/php8.2-fpm
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./environments/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    image: 'nginx:alpine'
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./environments/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #MySQL Service
+  db:
+    image: 'mariadb:10'
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./environments/mysql/dbdata:/var/lib/mysql/
+      - ./environments/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+    healthcheck:
+        test: [ "CMD", "ping", "-p${DB_PASSWORD}" ]
+        retries: 3
+        timeout: 5s
+
+  #Redis Service
+  redis:
+    image: 'redis:alpine'
+    container_name: redis
+    restart: unless-stopped
+    tty: true
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+      - ./environments/redis:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      timeout: 5s
+
+  #Memcached Service
+  memcached:
+      image: 'memcached:alpine'
+      container_name: memcached
+      restart: unless-stopped
+      tty: true
+      ports:
+          - '${FORWARD_MEMCACHED_PORT:-11211}:11211'
+      networks:
+          - app-network
+
+  #Rabbitmq Service
+  rabbitmq:
+      build:
+        context: .
+        dockerfile: environments/rabbitmq/Dockerfile
+      image: rabbitmq
+      container_name: rabbitmq
+      restart: unless-stopped
+      tty: true
+      ports:
+          - "${RABBITMQ_NODE_HOST_PORT:-5672}:5672"
+          - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT:-15672}:15672"
+          - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT:-15671}:15671"
+          - "${RABBITMQ_WEB_STOMP_HOST_PORT:-15674}:15674"
+      privileged: true
+      hostname: laravel-rabbitmq
+      volumes:
+          - ./environments/rabbitmq/rmqdata:/var/lib/rabbitmq
+          - ./environments/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+          - ./environments/rabbitmq/management_agent.disable_metrics_collector.conf:/etc/rabbitmq/conf.d/management_agent.disable_metrics_collector.conf
+      networks:
+          - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
+  redis:
+    driver: local
+  rmqdata:
+    driver: local
