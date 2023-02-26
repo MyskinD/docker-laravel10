@@ -34,8 +34,8 @@
 
 ### install Auth module (при необходимости)
 
-1. docker-compose exec app npm install - устанавливаем Laravel Mix
+1. docker-compose exec app npm install - устанавливаем npm
 2. composer require laravel/breeze --dev - ставим зависимость breeze
 3. docker-compose exec app php artisan breeze:install - устанавливаем модуль авторизации (уже установлен)
-4. docker-compose exec app npm run dev - компилируем js/css из resource в public
-5. docker-compose exec app php artisan migrate - запускаем миграции
+4. npm run build - собираем фронт, компилируем js/css из resource в public->build
+5. npm run dev - запускаем vite
