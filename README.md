@@ -7,7 +7,7 @@
 3. sudo chown -R $USER:$USER . - задаем права пользователя на каталог проекта (не root)
 4. cp .env.example .env
 5. указываем в .env и docker-compose.yml - задаем настройки (название БД, имя пользователя, пароль)
-6. добавляем папки в: /environments/mysql/dbdata, /environments/rabbitmq/rmqdata, /environments/redis
+6. добавляем папки в: /environments/mysql/dbdata, /environments/rabbitmq/rmqdata, /environments/redis/redisdata
 7. sudo docker-compose up -d - поднимаем контейнеры
 8. docker-compose exec app composer install - подтягиваем зависимости
 9. docker-compose exec app php artisan key:generate - генерируем ключ

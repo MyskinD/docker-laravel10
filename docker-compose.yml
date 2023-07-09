@@ -4,9 +4,12 @@ services:
   #PHP Service
   app:
     build:
-      context: .
-      dockerfile: environments/php/Dockerfile
-    image: fixeditforyou/php8.2-fpm
+      args:
+        user: myskind
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: kleland/php8.1-fpm
     container_name: app
     restart: unless-stopped
     tty: true
@@ -21,9 +24,9 @@ services:
       - app-network
 
   #Nginx Service
-  webserver:
+  nginx:
     image: 'nginx:alpine'
-    container_name: webserver
+    container_name: nginx
     restart: unless-stopped
     tty: true
     ports:
@@ -69,7 +72,7 @@ services:
     ports:
       - '${FORWARD_REDIS_PORT:-6379}:6379'
     volumes:
-      - ./environments/redis:/data
+      - ./environments/redis/redisdata:/data
     networks:
       - app-network
     healthcheck:
@@ -91,7 +94,7 @@ services:
   #Rabbitmq Service
   rabbitmq:
       build:
-        context: .
+        context: ./
         dockerfile: environments/rabbitmq/Dockerfile
       image: rabbitmq
       container_name: rabbitmq

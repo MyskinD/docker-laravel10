@@ -17,6 +17,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/environments/mysql/dbdata/*
-/environments/rabbitmq/rmqdata/*
-/environments/redis/*
+/environments/mysql/dbdata
+/environments/rabbitmq/rmqdata
+/environments/redis/redisdata
