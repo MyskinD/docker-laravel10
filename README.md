@@ -32,10 +32,29 @@
 2. \DB::table('migrations')->get(); - выводит все строки в табилце
 3. exit - выходим
 
+### Install Vite
+
+NVM (Node Version Manager):
+
+1. sudo apt install build-essential checkinstall libssl-dev - устанавливаем вспомогательные пакеты
+2. curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash - устанавливаем пакет
+3. source ~/.profile - перезапускаем сессию
+4. nvm ls-remote - проверяем работу пакета (показывает все версии node)
+
+NODE:
+
+1. nvm install node - устанавливаем последнюю версию ноды
+2. nvm run default --version - версия ноды, установленная по-умолчанию
+3. node -v - проверяем версию ноды
+4. npm -v - проверяем версию npm
+5. npm install -g npm@9.8.0 - при необходимости устанавливаем конкретную версию npm
+
+VITE:
+
+1. npm install && npm run dev - запускаем vite для сервера разработки (development)
+2. npm run build - собираем фронт, компилируем js/css из resource в public->build (production)
+
 ### install Auth module (при необходимости)
 
-1. docker-compose exec app npm install - устанавливаем npm
-2. composer require laravel/breeze --dev - ставим зависимость breeze
-3. docker-compose exec app php artisan breeze:install - устанавливаем модуль авторизации (уже установлен)
-4. npm run build - собираем фронт, компилируем js/css из resource в public->build
-5. npm run dev - запускаем vite
+1. docker-compose exec app composer require laravel/breeze --dev - ставим зависимость breeze
+2. docker-compose exec app php artisan breeze:install - устанавливаем модуль авторизации (уже установлен)
