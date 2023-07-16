@@ -38,6 +38,7 @@
 2. npx tailwindcss init -p - генерируем конфигурационные файлы tailwind.config.js и postcss.config.js
 3. В этих файлах правим возможный баг: необходимо заменить "export default {" на "module.exports = {"
 4. Тот же баг исправить в файле vite.config.js
+5. Для пересборки фронта удалить папку: node_modules и запустить команду: npm install && npm run dev
 
 ### Install Vite
 
