@@ -32,6 +32,13 @@
 2. \DB::table('migrations')->get(); - выводит все строки в табилце
 3. exit - выходим
 
+### Install Tailwind CSS
+
+1. npm install -D tailwindcss postcss autoprefixer - устанавливаем пакет с зависимостями
+2. npx tailwindcss init -p - генерируем конфигурационные файлы tailwind.config.js и postcss.config.js
+3. В этих файлах правим возможный баг: необходимо заменить "export default {" на "module.exports = {"
+4. Тот же баг исправить в файле vite.config.js
+
 ### Install Vite
 
 NVM (Node Version Manager):
